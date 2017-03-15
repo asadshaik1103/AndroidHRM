@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="connect Device-secure"
+        android:id="@+id/device_secure"
+        />
+
+    <item
+        android:title="connect device-insecure"
+        android:id="@+id/device_insecure"
+        />
+    <item
+        android:title="Make Discoverable"
+        android:id="@+id/make_discoverable"
+        />
+</menu>
