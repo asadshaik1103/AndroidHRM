@@ -1,39 +1,40 @@
 package com.example.asadshaik.androidhrm;
 
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.app.ActionBar;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+        import android.app.Activity;
+        import android.bluetooth.BluetoothAdapter;
+        import android.bluetooth.BluetoothDevice;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.os.Handler;
+        import android.os.Message;
+        import android.support.annotation.Nullable;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentActivity;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.Menu;
+        import android.view.MenuInflater;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
+        import android.widget.Button;
+        import android.widget.ListView;
+        import android.widget.Toast;
+        import android.app.ActionBar;
 
-import java.util.Arrays;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.database.ChildEventListener;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+
+        import java.util.Arrays;
 
 
 /**
@@ -66,10 +67,12 @@ public class BlankFragment extends Fragment {
 
     Button send_button;
     String realMessage = new String();
+    String readings;
+    DatabaseReference db;
 
     //Firebase
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mMessagesDatabaseReference;
+    //private DatabaseReference mMessagesDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mfirebaseUser;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -128,6 +131,72 @@ public class BlankFragment extends Fragment {
         }
     }
 
+    private final Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            FragmentActivity activity = getActivity();
+            switch (msg.what){
+                case DataConstants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1){
+                        case DataExchange.STATE_CONNECTED:
+                            setStatus(getString(R.string.title_connected_to,mConnectedDeviceName));
+                            readingArrayAdapter.clear();
+                            break;
+                        case DataExchange.STATE_CONNECTING:
+                            setStatus(R.string.title_connecting);
+                            break;
+                        case DataExchange.STATE_LISTEN:
+                        case DataExchange.STATE_NONE:
+                            setStatus(R.string.title_not_connected);
+                            break;
+                    }
+                    break;
+                case DataConstants.MESSAGE_READ:
+                    byte[] readbuf = (byte[]) msg.obj;
+                    String readmessage = new String(readbuf,0,msg.arg1);
+
+                    // String result[] = {"70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110"};
+
+
+                    //for (int i = 0;i<result.length;i++){
+                    //   if (result[i].equals(readmessage)){
+                    // readingArrayAdapter.add(mConnectedDeviceName+" "+readmessage);
+
+                    realMessage = readmessage;
+                    // }
+                    //}
+
+                    //make next two comments as statements if the above doesn't work
+                    //if(Arrays.asList(codes).contains(userCode))
+                    //readingArrayAdapter.add(mConnectedDeviceName+" "+readmessage);
+
+                    readingArrayAdapter.add(" "+realMessage);
+                    send_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            HeartReadings heartReadings = new HeartReadings();
+                            heartReadings.setReading(realMessage);
+                            save(heartReadings);
+                        }
+                    });
+                    break;
+
+                case DataConstants.MESSAGE_DEVICE_NAME:
+                    mConnectedDeviceName = msg.getData().getString(DataConstants.device_name);
+                    if (null!=activity){
+                        Toast.makeText(activity,"Connected to" + mConnectedDeviceName,Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case DataConstants.MESSAGE_TOAST:
+                    if (null!=activity){
+                        Toast.makeText(activity,msg.getData().getString(DataConstants.toast),Toast.LENGTH_LONG).show();
+                    }
+                    break;
+
+
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,21 +209,25 @@ public class BlankFragment extends Fragment {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mfirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("readings");
+        //mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("readings");
 
+
+        readings=realMessage;
+
+        db=FirebaseDatabase.getInstance().getReference();
 
         send_button = (Button) view.findViewById(R.id.send);
-        send_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HeartReadings heartReadings = new HeartReadings(realMessage);
-                mMessagesDatabaseReference.push().setValue(heartReadings);
-            }
-        });
+
         return view;
 
 
     }
+
+    public boolean save(HeartReadings heartReadings){
+        db.child("HeartReadings").push().setValue(heartReadings);
+        return true;
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -170,7 +243,7 @@ public class BlankFragment extends Fragment {
 
         dataExchange = new DataExchange(getActivity(),mHandler);
 
-        mOutSringBuffer = new StringBuffer(" ");
+        //mOutSringBuffer = new StringBuffer(" ");
     }
 
 
@@ -238,73 +311,7 @@ public class BlankFragment extends Fragment {
 
     }
 
-    private final Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            FragmentActivity activity = getActivity();
-            switch (msg.what){
-                case DataConstants.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1){
-                        case DataExchange.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connected_to,mConnectedDeviceName));
-                            readingArrayAdapter.clear();
-                            break;
-                        case DataExchange.STATE_CONNECTING:
-                            setStatus(R.string.title_connecting);
-                            break;
-                        case DataExchange.STATE_LISTEN:
-                        case DataExchange.STATE_NONE:
-                            setStatus(R.string.title_not_connected);
-                            break;
-                    }
-                    break;
-                case DataConstants.MESSAGE_READ:
-                    byte[] readbuf = (byte[]) msg.obj;
-                    String readmessage = new String(readbuf,0,msg.arg1);
 
-
-
-                   // String result[] = {"70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110"};
-
-
-                    //for (int i = 0;i<result.length;i++){
-                     //   if (result[i].equals(readmessage)){
-                           // readingArrayAdapter.add(mConnectedDeviceName+" "+readmessage);
-
-                            realMessage = readmessage;
-                       // }
-                    //}
-
-
-
-                    //make next two comments as statements if the above doesn't work
-                    //if(Arrays.asList(codes).contains(userCode))
-                    //readingArrayAdapter.add(mConnectedDeviceName+" "+readmessage);
-
-                    readingArrayAdapter.add(" "+realMessage);
-
-
-
-
-
-                    break;
-
-                case DataConstants.MESSAGE_DEVICE_NAME:
-                    mConnectedDeviceName = msg.getData().getString(DataConstants.device_name);
-                    if (null!=activity){
-                        Toast.makeText(activity,"Connected to" + mConnectedDeviceName,Toast.LENGTH_LONG).show();
-                    }
-                    break;
-                case DataConstants.MESSAGE_TOAST:
-                    if (null!=activity){
-                        Toast.makeText(activity,msg.getData().getString(DataConstants.toast),Toast.LENGTH_LONG).show();
-                    }
-                    break;
-
-
-            }
-        }
-    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
