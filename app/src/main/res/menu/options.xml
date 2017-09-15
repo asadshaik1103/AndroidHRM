@@ -7,7 +7,7 @@
         android:title="Symptoms"
         android:id="@+id/symptoms"/>
     <item
-        android:title="About"
+        android:title="logout"
         android:id="@+id/about"/>
 
 </menu>

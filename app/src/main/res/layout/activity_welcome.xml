@@ -9,27 +9,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-
+    android:background="@drawable/background_black2"
     tools:context="com.example.asadshaik.androidhrm.Welcome">
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="52dp"
-        android:background="@drawable/connect"
-        android:id="@+id/connect" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ecell_logo"
-        android:id="@+id/imageView4"
-        android:layout_alignTop="@+id/buttonSignup"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="44dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,21 +20,21 @@
         android:text="User Registration"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
-
+        android:textColor="#ffffff"
+        android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:id="@+id/buttonSignup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Signup"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="95dp"
 
-        android:layout_below="@+id/editTextEmail"
-        android:layout_alignStart="@+id/editTextPassword" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="skip>>"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        android:id="@+id/skip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:text="Already Registered? Signin Here"
@@ -62,10 +44,23 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-
-        android:layout_marginTop="40dp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="41dp"
         android:layout_below="@+id/buttonSignup"
-        android:layout_alignEnd="@+id/buttonSignup" />
+        android:layout_alignStart="@+id/editTextPassword" />
+
+
+    <Button
+        android:id="@+id/buttonSignup"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text=" "
+        android:background="@drawable/register_button"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -75,9 +70,9 @@
         android:inputType="textPassword"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_below="@+id/editTextEmail"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="23dp" />
+        android:textColorHint="#000000"
+        android:layout_above="@+id/buttonSignup"
+        android:layout_marginBottom="11dp" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -85,11 +80,10 @@
         android:layout_height="wrap_content"
         android:hint="Enter email"
         android:inputType="textEmailAddress"
-        android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="26dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:textColorHint="#000000"
+        android:layout_above="@+id/editTextPassword"
+        android:layout_alignStart="@+id/editTextPassword" />
 
 
 </RelativeLayout>

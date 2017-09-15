@@ -8,17 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background_black2"
     tools:context="com.example.asadshaik.androidhrm.Readings">
 
-    <TextView
-        android:text="Sample Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="130dp"
-        android:layout_marginTop="108dp"
-        android:id="@+id/textView" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

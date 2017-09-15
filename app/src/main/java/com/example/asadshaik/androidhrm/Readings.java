@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+
 public class Readings extends AppCompatActivity {
 
     @Override
@@ -43,7 +45,9 @@ public class Readings extends AppCompatActivity {
                 return true;
 
             case R.id.about:
-                Toast.makeText(getApplicationContext(), "About", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Logged out", Toast.LENGTH_LONG).show();
+                AuthUI.getInstance().signOut(this);
+
                 return true;
 
             default:

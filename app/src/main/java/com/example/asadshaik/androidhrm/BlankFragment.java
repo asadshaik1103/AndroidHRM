@@ -23,9 +23,12 @@ package com.example.asadshaik.androidhrm;
         import android.widget.ArrayAdapter;
         import android.widget.Button;
         import android.widget.ListView;
+        import android.widget.TextView;
         import android.widget.Toast;
         import android.app.ActionBar;
 
+        import com.github.clans.fab.FloatingActionButton;
+        import com.github.clans.fab.FloatingActionMenu;
         import com.google.firebase.auth.FirebaseAuth;
         import com.google.firebase.auth.FirebaseUser;
         import com.google.firebase.database.ChildEventListener;
@@ -34,6 +37,7 @@ package com.example.asadshaik.androidhrm;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
 
+        import java.util.ArrayList;
         import java.util.Arrays;
 
 
@@ -65,17 +69,29 @@ public class BlankFragment extends Fragment {
 
     private DataExchange dataExchange = null;
 
+    private String userId;
+
+    //Floating Action buttons
+    FloatingActionMenu materialDesignFAM;
+    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+
+    //private ArrayAdapter<HeartReadings> readingArrayAdapter;
+    public ArrayList<HeartReadings> items=new ArrayList<>();
+
+    public ArrayList<HeartReadings> heartReadings=new ArrayList<>();
     Button send_button;
+    TextView textReading;
     String realMessage = new String();
     String readings;
     DatabaseReference db;
 
     //Firebase
     private FirebaseDatabase mFirebaseDatabase;
-    //private DatabaseReference mMessagesDatabaseReference;
+    private DatabaseReference mMessagesDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mfirebaseUser;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
 
     public BlankFragment() {
         // Required empty public constructor
@@ -153,32 +169,48 @@ public class BlankFragment extends Fragment {
                     break;
                 case DataConstants.MESSAGE_READ:
                     byte[] readbuf = (byte[]) msg.obj;
-                    String readmessage = new String(readbuf,0,msg.arg1);
+                    final String readmessage = new String(readbuf,0,msg.arg1);
 
-                    // String result[] = {"70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110"};
+                    String result[] = {"70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110"};
 
 
-                    //for (int i = 0;i<result.length;i++){
-                    //   if (result[i].equals(readmessage)){
-                    // readingArrayAdapter.add(mConnectedDeviceName+" "+readmessage);
+                    for (int i = 0;i<result.length;i++){
+                       if (result[i].equals(readmessage)){
+                           //readingArrayAdapter.add(" "+readmessage);
+                           textReading.setText(readmessage);
+                           realMessage=readmessage;
+                       }
 
-                    realMessage = readmessage;
-                    // }
+                    //realMessage = readmessage;
+                    }
                     //}
 
                     //make next two comments as statements if the above doesn't work
                     //if(Arrays.asList(codes).contains(userCode))
                     //readingArrayAdapter.add(mConnectedDeviceName+" "+readmessage);
 
-                    readingArrayAdapter.add(" "+realMessage);
-                    send_button.setOnClickListener(new View.OnClickListener() {
+                    //readingArrayAdapter.add(" "+realMessage);
+
+
+                    floatingActionButton1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             HeartReadings heartReadings = new HeartReadings();
-                            heartReadings.setReading(realMessage);
+                            heartReadings.setUserid(userId);
+                            heartReadings.setReading(realMessage+" bpm");
                             save(heartReadings);
+
                         }
                     });
+                    /*send_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            HeartReadings heartReadings = new HeartReadings();
+                            heartReadings.setReading(realMessage+"bpm");
+                            save(heartReadings);
+                        }
+                    });*/
+
                     break;
 
                 case DataConstants.MESSAGE_DEVICE_NAME:
@@ -216,11 +248,33 @@ public class BlankFragment extends Fragment {
 
         db=FirebaseDatabase.getInstance().getReference();
 
-        send_button = (Button) view.findViewById(R.id.send);
+        textReading = (TextView) view.findViewById(R.id.textReading);
+        /*retrieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retrieve();
+            }
+        });*/
+
+
+        userId = mFirebaseAuth.getCurrentUser().getUid();
+
+
+
+
+        materialDesignFAM = (FloatingActionMenu) view.findViewById(R.id.material_design_android_floating_action_menu);
+        floatingActionButton1 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item1);
+        floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item2);
+
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),Records.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
-
-
     }
 
     public boolean save(HeartReadings heartReadings){
@@ -228,10 +282,55 @@ public class BlankFragment extends Fragment {
         return true;
     }
 
+    public void fetchData(DataSnapshot dataSnapshot){
+        heartReadings.clear();
+
+        for(DataSnapshot ds:dataSnapshot.getChildren()){
+            HeartReadings readings=ds.getValue(HeartReadings.class);
+            heartReadings.add(readings);
+
+        }
+
+    }
+
+    public ArrayList<HeartReadings> retrieve() {
+
+        db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                fetchData(dataSnapshot);
+                readingArrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                fetchData(dataSnapshot);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                fetchData(dataSnapshot);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                fetchData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return heartReadings;
+    }
+
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         in = (ListView) view.findViewById(R.id.in);
+
 
     }
 

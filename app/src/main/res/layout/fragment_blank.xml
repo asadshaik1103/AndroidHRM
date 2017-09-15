@@ -1,27 +1,109 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="0dp"
     android:orientation="vertical"
-    tools:context="com.example.asadshaik.androidhrm.BlankFragment">
+    tools:context="com.example.asadshaik.androidhrm.BlankFragment"
+    android:weightSum="1">
 
-    <!-- TODO: Update blank fragment layout -->
-        <ListView
-            android:id="@+id/in"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:stackFromBottom="true"
-            android:transcriptMode="alwaysScroll">
 
-        </ListView>
-
-    <Button
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="YOUR HEART RATE IS:"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:layout_marginTop="100dp"
+        android:textColor="#ffffff"/>
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SEND"
-        android:id="@+id/send" >
-        </Button>
+        android:text="No Readings"
+        android:textColor="#ffffff"
+        android:textSize="34dp"
+        android:layout_gravity="center"
+        android:id="@+id/textReading"/>
+
+    <TextView
+        android:layout_width="69dp"
+        android:layout_height="31dp"
+        android:text="bpm"
+        android:layout_marginTop="270dp"
+        android:layout_marginLeft="180dp"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:textColor="#ffffff"/>
 
 
-</LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/material_design_android_floating_action_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="11dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        fab:menu_animationDelayPerItem="55"
+        fab:menu_backgroundColor="@android:color/transparent"
+        fab:menu_buttonSpacing="0dp"
+        fab:menu_colorNormal="#da3c2f"
+        fab:menu_colorPressed="#dc4b3f"
+        fab:menu_colorRipple="#99d4d4d4"
+        fab:menu_fab_label="Menu"
+        fab:menu_fab_size="normal"
+        fab:menu_icon="@drawable/fab_add"
+        fab:menu_labels_colorNormal="#333"
+        fab:menu_labels_colorPressed="#444"
+        fab:menu_labels_colorRipple="#66efecec"
+        fab:menu_labels_cornerRadius="3dp"
+        fab:menu_labels_ellipsize="none"
+        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+        fab:menu_labels_margin="0dp"
+        fab:menu_labels_maxLines="-1"
+        fab:menu_labels_padding="8dp"
+        fab:menu_labels_position="left"
+        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+        fab:menu_labels_showShadow="true"
+        fab:menu_labels_singleLine="false"
+        fab:menu_labels_textColor="#f2f1f1"
+        fab:menu_labels_textSize="15sp"
+        fab:menu_openDirection="up"
+        fab:menu_shadowColor="#66aff198"
+        fab:menu_shadowRadius="4dp"
+        fab:menu_shadowXOffset="1dp"
+        fab:menu_shadowYOffset="4dp"
+        fab:menu_showShadow="true">
+
+
+    <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/material_design_floating_action_menu_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:backgroundTint="#dc4b3f"
+            android:src="@drawable/records_icon"
+            fab:fab_label="Store"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/material_design_floating_action_menu_item2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/activity_icon"
+            fab:fab_label="Track"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/in"
+        android:visibility="gone"/>
+
+
+</FrameLayout>

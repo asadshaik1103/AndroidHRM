@@ -1,5 +1,7 @@
 package com.example.asadshaik.androidhrm;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -35,9 +37,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.AuthResult;
 
-public class Welcome extends AppCompatActivity {
+public class Welcome extends Activity {
 
-    Button connect;
+    TextView skip;
     private SignInButton mGoogleBtn;
 
     public static final String ANONYMOUS = "anonymous";
@@ -102,6 +104,8 @@ public class Welcome extends AppCompatActivity {
             public void onClick(View v) {
                 if(v == buttonSignup){
                     registerUser();
+                    Intent intent = new Intent(v.getContext(),Readings.class);
+                    startActivity(intent);
                 }
 
             }
@@ -141,9 +145,9 @@ public class Welcome extends AppCompatActivity {
                 signIn();
             }
         });*/
-        connect = (Button)findViewById(R.id.connect);
+        skip = (TextView) findViewById(R.id.skip);
 
-        connect.setOnClickListener(new View.OnClickListener() {
+        skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), Details.class);

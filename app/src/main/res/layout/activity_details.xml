@@ -8,15 +8,42 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/background"
+    android:background="@drawable/background4"
     tools:context="com.example.asadshaik.androidhrm.Details">
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Start>>"
+        android:textSize="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="52dp"
-        android:background="@drawable/start"
+        android:layout_centerHorizontal="true"
         android:id="@+id/start" />
+
+    <TextView
+        android:text="Welcome to Android HRM."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:id="@+id/textView2"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_marginTop="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Place your finger on the sensor to measure your heart rate."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:textColor="@color/tw__blue_pressed_light"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:textColorHint="@android:color/holo_blue_bright"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="59dp"
+        android:id="@+id/textView3" />
+
 </RelativeLayout>

@@ -6,12 +6,29 @@ package com.example.asadshaik.androidhrm;
 
 public class HeartReadings {
     private String reading;
+    private String userid;
+
     public HeartReadings(){
     }
 
-    public HeartReadings(String reading){
+    public HeartReadings(String userid,String reading){
+
+        this.userid=userid;
+
         this.reading = reading;
     }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+
+
+
 
     public String getReading() {
         return reading;
